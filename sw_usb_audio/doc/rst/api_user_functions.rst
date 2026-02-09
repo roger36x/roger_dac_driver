@@ -1,0 +1,32 @@
+User function definitions
+=========================
+
+The following functions can be optionally defined by an application to override default (empty)
+implementations in ``lib_xua``.
+
+External audio hardware configuration
+-------------------------------------
+
+The functions listed below should be implemented to configure external audio hardware.
+
+.. doxygenfunction:: AudioHwInit
+.. doxygenfunction:: AudioHwConfig
+.. doxygenfunction:: AudioHwConfig_Mute
+.. doxygenfunction:: AudioHwConfig_UnMute
+.. doxygenfunction:: AudioHwShutdown
+
+Audio streaming notification
+----------------------------
+
+The functions listed below can be useful for mute lines, indication LEDs etc.
+
+.. doxygenfunction:: UserAudioStreamState
+
+HID controls
+------------
+
+The following function is called when the device wishes to read physical user input (buttons etc).
+The function should write relevant HID bits into this array.
+The bit ordering and functionality is defined by the HID report descriptor used.
+
+.. doxygenfunction:: UserHIDGetData
