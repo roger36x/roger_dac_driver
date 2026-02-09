@@ -1,0 +1,30 @@
+# XMOS build artifacts
+**/build/
+**/bin/
+*.xe
+*.xi
+*.o
+*.i
+*.a
+
+# XMOS temp files
+**/flash_bin_node*
+**/fw-*
+**/s2l-*
+**/spanning-xn-*
+**/target-xn*
+
+# macOS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*.swn
+*~
+*.*~
+
+# Python
+*.pyc
+**/*.egg-info/
+**/*venv/*
