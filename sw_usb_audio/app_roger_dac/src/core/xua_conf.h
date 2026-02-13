@@ -1,10 +1,12 @@
-// Roger DAC v3.4.2 — XMOS XU216 固件配置
+// Roger DAC v3.4.3.2 — XMOS XU216 固件配置
 // 基于 sw_usb_audio 参考设计，针对 Roger DAC 硬件定制。
 //
 // 核心目标：32fs I2S 帧格式输出 → TDA1543 ×4（2并联/声道）
 // 时钟：外部 CCHD-957 双晶振，OE 互斥切换
+// 继电器：Omron G6K-2F，上电延迟 2 秒接通（防 thump）
+// 采样率 LED：74HC138 译码驱动 6 颗 LED
 //
-// 参考：roger_dac_v3.4.2.md §4.3, usb_driver_dev.md §2.3
+// 参考：roger_dac_v3.4.3.2.md §4.3, usb_driver_dev.md §2.3
 #ifndef _XUA_CONF_H_
 #define _XUA_CONF_H_
 
@@ -98,8 +100,8 @@
 #define PID_AUDIO_2                         (0x000E)
 #define PID_AUDIO_1                         (0x000F)
 
-#define PRODUCT_STR_A2                      "Roger DAC v3.4.2 (UAC2.0)"
-#define PRODUCT_STR_A1                      "Roger DAC v3.4.2 (UAC1.0)"
+#define PRODUCT_STR_A2                      "Roger DAC v3.4.3.2 (UAC2.0)"
+#define PRODUCT_STR_A1                      "Roger DAC v3.4.3.2 (UAC1.0)"
 
 // ============================================================================
 //  Tile 分配（与 XK-AUDIO-216-MC-AB 开发板一致）
@@ -125,8 +127,25 @@
 
 // 当 ROGER_DAC_OSC_OE_ENABLE = 1 时，以下引脚定义生效
 // 具体 port 需根据最终 PCB 原理图确定
-// #define ROGER_DAC_OE_44K_PORT            XS1_PORT_1x  // 22.5792 MHz OE
-// #define ROGER_DAC_OE_48K_PORT            XS1_PORT_1x  // 24.576 MHz OE
+//
+// GPIO_A: 晶振 #1 OE（22.5792 MHz），10kΩ 下拉
+// GPIO_B: 晶振 #2 OE（24.576 MHz），10kΩ 下拉
+// #define ROGER_DAC_OE_44K_PORT            XS1_PORT_1x
+// #define ROGER_DAC_OE_48K_PORT            XS1_PORT_1x
+//
+// GPIO_C: 继电器控制（Omron G6K-2F，NPN 驱动），10kΩ 下拉
+//   上电默认 LOW（断开），USB 枚举完成后延迟 2 秒拉高
+// #define ROGER_DAC_RELAY_PORT             XS1_PORT_1x
+#define ROGER_DAC_RELAY_DELAY_MS            2000
+//
+// GPIO_D/E/F: 采样率 LED 编码 → 74HC138 译码器
+//   GPIO[F:E:D] 编码表：
+//     000 = 44.1k,  001 = 48k,   010 = 88.2k
+//     011 = 96k,    100 = 176.4k, 101 = 192k
+//     111 = 全灭（OFF 状态）
+// #define ROGER_DAC_LED_D_PORT             XS1_PORT_1x  // bit0 (A0)
+// #define ROGER_DAC_LED_E_PORT             XS1_PORT_1x  // bit1 (A1)
+// #define ROGER_DAC_LED_F_PORT             XS1_PORT_1x  // bit2 (A2)
 
 #include "user_main.h"
 
